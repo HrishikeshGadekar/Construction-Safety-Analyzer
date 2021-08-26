@@ -40,7 +40,7 @@ body {
 	height:400px;
 }
 
-.login h1 { color: #fff; text-shadow: 0 0 10px rgba(0,0,0,0.3); letter-spacing:1px; text-align:center; }
+.login h1 {  color: rgb(229, 214, 143); font-size: 13px; text-shadow: 0 0 10px rgba(0,0,0,0.3); letter-spacing:1px; text-align:center; }
 
 input { 
 	width: 100%; 
