@@ -20,19 +20,25 @@ def predict():
 #     int_features = [float(x) for x in request.form.values()]
 #     final_features = [np.array(int_features)]
     prediction = model.predict(request.form.values())
+    
+    # Output Confidence scores
+    probability_class_GO = model.predict_proba(request.form.values())[:, 0]
+    probability_class_UA = model.predict_proba(request.form.values())[:, 1]
+    probability_class_UC = model.predict_proba(request.form.values())[:, 2]
 
     
     if prediction==0:
         return render_template('index.html',
-                               prediction_text='{}: This is a Good Observation!'.format(prediction),
+                               prediction_text='{}: This is a Good Observation!\n         The Prediction Confidence for each class are- \n GO: {}, UA: {}, UC: {}'.format(prediction, probability_class_GO, probability_class_UA,probability_class_UC),
+                               
                                )
     elif prediction==1:
         return render_template('index.html',
-                               prediction_text='{}: This is an Unsafe Act !!'.format(prediction),
+                               prediction_text='{}: This is an Unsafe Act !!\n            The Prediction Confidence for each class are- \n GO: {}, UA: {}, UC: {}'.format(prediction, probability_class_GO, probability_class_UA,probability_class_UC),
                                )
     else:
         return render_template('index.html',
-                               prediction_text='{}: This is an Unsafe Condition !!'.format(prediction),
+                               prediction_text='{}: This is an Unsafe Condition !!\n      The Prediction Confidence for each class are- \n GO: {}, UA: {}, UC: {}'.format(prediction, probability_class_GO, probability_class_UA,probability_class_UC),
                               )
 
 if __name__ == "__main__":
