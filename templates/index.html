@@ -1,35 +1,47 @@
-<!DOCTYPE html>
-<html >
+import numpy as np
+from flask import Flask, request, render_template
+from sklearn.feature_extraction.text import TfidfVectorizer
+import pickle
 
-<head>
-  <meta charset="UTF-8">
-  <title>Safety Analyzer</title>
-  <link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
-<link href='https://fonts.googleapis.com/css?family=Arimo' rel='stylesheet' type='text/css'>
-<link href='https://fonts.googleapis.com/css?family=Hind:300' rel='stylesheet' type='text/css'>
-<link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
-<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-  
-</head>
+app = Flask(__name__)
+# read our pickle file and label our logisticmodel as model
+model = pickle.load(open('model.pkl', 'rb'))
 
-<body>
-	<h1>Classification of Safety Observation Reports</h1>
- <div class="login">
-	
+@app.route('/')
+def home():
+    return render_template('index.html')
 
-     <!-- Main Input For Receiving Query to our ML -->
-    <form action="{{ url_for('predict')}}"method="post">
-		<input type="text" name="Safety Observation" placeholder="Safety Observation" required="required" />
+@app.route('/predict',methods=['POST','GET'])
+def predict():
 
-        <button type="submit" class="btn btn-primary btn-block btn-large">Predict</button>
-    </form>
+    prediction = model.predict(request.form.values())
+    
+    # Output Confidence scores
+    probability_class_GO = model.predict_proba(request.form.values())[:, 0]
+    probability_class_UA = model.predict_proba(request.form.values())[:, 1]
+    probability_class_UC = model.predict_proba(request.form.values())[:, 2]
+    
 
-   <br>
-   <br>
-   {{ prediction_text }}
+    if probability_class_GO[0]==0.08765182261021813 or probability_class_UA[0]==0.1355507998162925 or probability_class_UC[0]==0.7767973775734893:
+        return render_template('index.html',
+                               inp='Input: {}'.format(request.form.to_dict(flat=True)['Safety Observation']),
+                               prediction_text='---> This is an Invalid Input. Please try again.',
+                               )
+    elif prediction==0:
+        return render_template('index.html',
+                               inp='Input: {}'.format(request.form.to_dict(flat=True)['Safety Observation']),
+                               prediction_text='---> This is a Good Observation!\n The Prediction Confidence for each class are-\n GO: {},\n UA: {},\n UC: {}'.format(probability_class_GO[0], probability_class_UA[0],probability_class_UC[0]),
+                               )
+    elif prediction==1:
+        return render_template('index.html',
+                               inp='Input: {}'.format(request.form.to_dict(flat=True)['Safety Observation']),
+                               prediction_text='---> This is an Unsafe Act !!\nThe Prediction Confidence for each class are- \n GO: {}, UA: {}, UC: {}'.format(probability_class_GO[0], probability_class_UA[0],probability_class_UC[0])
+                               )
+    else:
+        return render_template('index.html',
+                               inp='Input: {}'.format(request.form.to_dict(flat=True)['Safety Observation']),
+                               prediction_text='---> This is an Unsafe Condition !!\nThe Prediction Confidence for each class are- \n GO: {}, UA: {}, UC: {}'.format(probability_class_GO[0], probability_class_UA[0],probability_class_UC[0])
+                              )
 
- </div>
-
-
-</body>
-</html>
+if __name__ == "__main__":
+    app.run(debug=True)
