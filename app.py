@@ -4,10 +4,14 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 import pickle
 
 app = Flask(__name__)
-# read our pickle file and label our Ngram (1, 4) as model
-model = pickle.load(open('model1_4.pkl', 'rb'))
-# read our pickle file and label our Ngram (2, 4) as model2
-model2 = pickle.load(open('model2_4.pkl', 'rb'))
+# read our pickle file and label LR Ngram (1, 4) as model
+# model = pickle.load(open('model1_4.pkl', 'rb'))
+# read our pickle file and label LR Ngram (2, 4) as model2
+# model2 = pickle.load(open('model2_4.pkl', 'rb'))
+# read our pickle file and label LSVM Ngram (1, 4) as model
+model = pickle.load(open('lsvmmodel1_4.pkl', 'rb'))
+# read our pickle file and label LSVM Ngram (2, 4) as model2
+model2 = pickle.load(open('lsvmmodel2_4.pkl', 'rb'))
 
 @app.route('/')
 def home():
