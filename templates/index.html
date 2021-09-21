@@ -5,36 +5,68 @@
   <title>Construction Safety Analyzer</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
             integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+<style>
+h1 {text-align: center;}
+h3 {text-align: center;}
+p {text-align: center;}
+div {text-align: center; padding-left: 120px;}
+form {text-align: center;}
+nav {text-align: center;}
+a {text-align: center;}
+body {font-family:Lato}
+body {
+    background: -webkit-linear-gradient(#bba9a8, #f4f0eb); 
+}
+html {
+    min-height: 100%;
+}
+</style>
+
 </head>
+
+
 
 <nav class="navbar navbar-light" style="background-color: #c00404;">
   <!-- Navbar content -->
 </nav>
 <nav class="navbar navbar-light" style="background-color: #f4f0eb;" font-family: Lato>
   <!-- Navbar content -->
-    <a class="h1 text-decoration-none" href="/">Classification of Safety Observation Reports</a>
+    <a class="h2 text-decoration-none" class="font-weight-bold" href="/">Classification of Safety Observation Reports</a>
 </nav>
 
-<body font-family:Lato>
-
-
- <div class="shadow-sm p-3 mb-5 bg-white rounded">
-	
-
-     <!-- Main Input For Receiving Query to our ML -->	
+<body>
+<br>
+<br>
+<!-- Main Input For Receiving Query to our ML -->	
 	<form action="{{ url_for('predict')}}"method="post">
 	<input class="shadow-sm p-3 mb-5 bg-white rounded w-50 p-3" type="text" name="Safety Observation" placeholder="Safety Observation" required="required" />
 
   <button type="submit" class="btn btn-dark btn-lg">Predict</button>
 </form>
 
-   <br>
-   <br>
-   {{ inp }}
+<h3>{{ inp }}</h3>
+
+<br>
+
+<div style="width:1400px;" align="center">
+ <div class="shadow-sm p-3 mb-5 bg-white rounded" style="width:600px; float:left;" class="d-flex justify-content-center" style="background-color:red">
+	<h4> Ngram (1, 4) </h4>
+
+   
    <br>
    {{ prediction_text }}
 
  </div>
+ 
+
+ <div class="shadow-sm p-3 mb-5 bg-white rounded" style="width:600px; float:right;" class="d-flex justify-content-center" bgcolor="#c00404">
+<h4> Ngram (2, 4) </h4> 
+
+   <br>
+   {{ prediction_text2 }}
+
+ </div>
+</div>
 
 
 </body>
